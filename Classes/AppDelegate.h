@@ -41,4 +41,3 @@ public:
 };
 
 #endif // _APP_DELEGATE_H_
-
