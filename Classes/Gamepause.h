@@ -9,7 +9,7 @@ public:
 	static cocos2d::Scene* scene(RenderTexture* sqr);
 
 	CREATE_FUNC(Gamepause);
-	//¼ÌÐøÓÎÏ·  
+	//continue game
 	void menuContinueCallback(Object* pSender); 
 	void menuReplayCallback(Object* pSender);
 	void menuBcakCallback(Object* pSender);

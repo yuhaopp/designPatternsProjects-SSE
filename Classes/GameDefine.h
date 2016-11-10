@@ -1,22 +1,22 @@
 #ifndef  _Inkmoo_Elimination_h_
 #define  _Inkmoo_Elimination_h_
 
-// 定义屏幕宽高，这与所做的图片有关
+// Define the width and height of the screen
 #define GAME_SCREEN_WIDTH 600
 #define GAME_SCREEN_HEIGHT 800
 
-// 定义每个精灵大小与边框大小
+// Define every sprite's size and border size
 #define SPRITE_WIDTH 48
 #define BOADER_WIDTH 2
 
-// 游戏精灵行数和列数
+// the columns and rows of sprites
 #define ROWS 8
 #define COLS 8
 
-// 精灵种类总数
+// define amounts of sprites
 #define TOTAL_SPRITE 6
 
-// 普通的精灵
+// normal sprites
 static const char *spriteNormal[TOTAL_SPRITE] = {
 	"icon1.png",
 	"icon2.png",
@@ -25,7 +25,7 @@ static const char *spriteNormal[TOTAL_SPRITE] = {
 	"icon5.png",
 	"icon6.png"
 };
-//英雄HP
+//player's HP
 #define HERO_HP 5
 
 #define TIME 180
