@@ -1,12 +1,12 @@
-#include "HelloWorldScene.h"
+#include "GameMenuScene.h"
 USING_NS_CC;
-Scene* HelloWorld::createScene()
+Scene* GameMenu::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
+    auto layer = GameMenu::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -16,7 +16,7 @@ Scene* HelloWorld::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorld::init()
+bool GameMenu::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -41,7 +41,7 @@ bool HelloWorld::init()
 	MenuItemImage *playMenuItem = MenuItemImage::create(
 		"PlayItem.png",
 		"PlayItem.png",
-		CC_CALLBACK_1(HelloWorld::menuItemPlayCallback, this)
+		CC_CALLBACK_1(GameMenu::menuItemPlayCallback, this)
 		);
 	playMenuItem->setPosition(Director::getInstance()->convertToGL(Vec2(500,250)));
 	playMenuItem->setScale(1.2f);
@@ -49,7 +49,7 @@ bool HelloWorld::init()
 	MenuItemImage *SettingMenuItem = MenuItemImage::create(
 		"SettingItem.png",
 		"SettingItem.png",
-		CC_CALLBACK_1(HelloWorld::menuItemSettingCallback, this)
+		CC_CALLBACK_1(GameMenu::menuItemSettingCallback, this)
 		);
 	SettingMenuItem->setPosition(Director::getInstance()->convertToGL(Vec2(500, 380)));
 	SettingMenuItem->setScale(1.2f);
@@ -57,7 +57,7 @@ bool HelloWorld::init()
 	MenuItemImage *HelpMenuItem = MenuItemImage::create(
 		"HelpItem.png",
 		"HelpItem.png",
-		CC_CALLBACK_1(HelloWorld::menuItemHelpCallback, this)
+		CC_CALLBACK_1(GameMenu::menuItemHelpCallback, this)
 		);
 	HelpMenuItem->setPosition(Director::getInstance()->convertToGL(Vec2(500,510)));
 	HelpMenuItem->setScale(1.2f);
@@ -70,21 +70,21 @@ bool HelloWorld::init()
     return true;
 }
 
-void HelloWorld::menuItemPlayCallback(cocos2d::Ref* pSender)
+void GameMenu::menuItemPlayCallback(cocos2d::Ref* pSender)
 {
 	auto sc = LevelScene::createScene();
 	auto reScene = TransitionFadeUp::create(1.0f, sc);
 	Director::getInstance()->pushScene(reScene);
 }
 
-void HelloWorld::menuItemSettingCallback(cocos2d::Ref* pSender)
+void GameMenu::menuItemSettingCallback(cocos2d::Ref* pSender)
 {
 	auto sc = SettingScene::createScene();
 	auto reScene = TransitionFadeUp::create(1.0f, sc);
 	Director::getInstance()->pushScene(reScene);
 }
 
-void HelloWorld::menuItemHelpCallback(cocos2d::Ref* pSender)
+void GameMenu::menuItemHelpCallback(cocos2d::Ref* pSender)
 {
 	auto sc = HelpScene::createScene();
 	auto reScene = TransitionFadeUp::create(1.0f, sc);

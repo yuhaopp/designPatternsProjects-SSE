@@ -130,5 +130,5 @@ public:
 	CREATE_FUNC(PlayScene3);
 };
 
-#endif // __HELLOWORLD_SCENE_H__
+#endif // __GameMenu_SCENE_H__
 

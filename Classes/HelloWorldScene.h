@@ -1,5 +1,5 @@
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef __GAMEMENU_SCENE_H__
+#define __GAMEMENU_SCENE_H__
 
 #include "cocos2d.h"
 #include"SimpleAudioEngine.h"
@@ -10,7 +10,7 @@
 #include "cocos-ext.h"
 USING_NS_CC_EXT;
 
-class HelloWorld : public cocos2d::Layer
+class GameMenu : public cocos2d::Layer
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -24,6 +24,6 @@ public:
 	void menuItemPlayCallback(cocos2d::Ref* pSender);
 	void menuItemSettingCallback(cocos2d::Ref* pSender);
 
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(GameMenu);
 };
-#endif // __HELLOWORLD_SCENE_H__
+#endif // __GAMEMENU_SCENE_H__

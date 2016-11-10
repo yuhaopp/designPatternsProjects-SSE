@@ -1,5 +1,5 @@
 #include "LevelScene.h"
-#include "HelloWorldScene.h"
+#include "GameMenuScene.h"
 USING_NS_CC;
 
 Scene* LevelScene::createScene()
@@ -157,6 +157,6 @@ void LevelScene::adjustScrollView(float offset)
 
 void LevelScene::menuBackCallback(Ref* pSender)
 {
-	auto scene = HelloWorld::createScene();
+	auto scene = GameMenu::createScene();
 	Director::getInstance()->replaceScene(scene);
 }

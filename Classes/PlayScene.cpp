@@ -152,7 +152,7 @@ bool PlayScene1::init()
 	PlayScene::init();
 }
 
-//有待后续开发
+//Pending further development
 bool PlayScene2::init()
 {
 	if (!Layer::init())
