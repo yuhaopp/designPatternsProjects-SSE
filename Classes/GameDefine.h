@@ -31,5 +31,3 @@ static const char *spriteNormal[TOTAL_SPRITE] = {
 #define TIME 180
 
 #endif
-
-//test for branches.
