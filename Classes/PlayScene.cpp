@@ -17,6 +17,97 @@ using namespace ui;
 
 PlaySceneCover *PlayScene::_cover = NULL;
 
+class Observer
+{
+	public Observer();
+	virtual ~Observer() {}
+	virtual void Update() {}
+	// void Update(){
+
+	// 	pSubject->GetState();
+	// 	if(){
+	// 		Action();
+	// 	}
+	// }
+}
+
+class ConcreteObserver:Observer
+{
+public:
+	ConcreteObserver(Player *player):_player(player){}
+	void Update(){poison=true;}
+private:
+	Player *_player
+}
+
+
+class Player:Sprite
+{
+public:
+	Player();
+	void attach(Observer *observer){m_observers.push_back(observer);}
+	void detach(Observer *observer){m_observers.remove(observer);}
+	void notify()
+	{
+		list<Observer*>::iterator iter = m_observers.begin();
+		for(;iter!=m_observers.end();iter++)
+			(*iter)->Update();
+	}
+	virtual void setStatus(string s){m_status=s;}
+	virtual string getStatus(){return m_status;}
+private:
+	list<Observer* > m_observers;
+	string m_status;
+}
+
+
+class Enemy:Sprite
+{
+
+}
+
+typedef enum EnemyTypeTag
+{
+	TypeA,
+	TypeB,
+	TypeC
+}ENEMYTYPE;
+
+class Enemy1:Enemy
+{
+
+}
+
+class Enemy2:Enemy
+{
+
+}
+
+class Enemy3:Enemy
+{
+
+}
+
+class Factory
+{
+public:
+	Enemy* createEnemy(ENEMYTYPE type)
+	{
+		switch(type)
+		{
+			case TypeA:
+			return new Enemy1();
+			case TypeB:
+			return new Enemy2();
+			default:
+			case TypeC:
+			return new Enemy3();
+			return NULL;
+		}	
+	}
+
+}
+
 Scene* PlayScene1::createScene()
 {
 	auto scene = Scene::create();
@@ -152,7 +243,7 @@ bool PlayScene1::init()
 	PlayScene::init();
 }
 
-//Pending further development
+//ÓÐ´ýºóÐø¿ª·¢
 bool PlayScene2::init()
 {
 	if (!Layer::init())
@@ -343,19 +434,19 @@ void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 
 	if (EventKeyboard::KeyCode::KEY_W == keyCode)
 	{
-		playerPos.y += _tileMap->getTileSize().height;
+		Up();
 	}
 	if (EventKeyboard::KeyCode::KEY_S == keyCode)
 	{
-		playerPos.y -= _tileMap->getTileSize().height;
+		Down();
 	}
 	if (EventKeyboard::KeyCode::KEY_A == keyCode)
 	{
-		playerPos.x -= _tileMap->getTileSize().width;
+		Left();
 	}
 	if (EventKeyboard::KeyCode::KEY_D == keyCode)
 	{
-		playerPos.x += _tileMap->getTileSize().width;
+		Right();
 
 	}
 	if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getMapSize().width) &&
@@ -367,6 +458,26 @@ void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 	}
 
 	this->ViewPoint(_player->getPosition());
+}
+
+void Up()
+{
+	playerPos.y += _tileMap->getTileSize().height;
+}
+
+void Down()
+{
+	playerPos.y -= _tileMap->getTileSize().height;
+}
+
+void Left()
+{
+	playerPos.x -= _tileMap->getTileSize().width;
+}
+
+void Right()
+{
+	playerPos.x += _tileMap->getTileSize().width;
 }
 
 void PlayScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
@@ -568,7 +679,7 @@ void PlayScene::Enemy_Move(Point pos, int i)
 
 void PlayScene::addEnemy(Point pos)
 {
-	pos.x+=100 * rand_minus1_1();
+	pos.x+=100 * rand_minus1_1()
 	pos.y+=100 * rand_minus1_1();
 	auto enemy = Sprite::create("enemy_0.png");
 	enemy->setPosition(pos);
