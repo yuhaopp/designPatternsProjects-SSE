@@ -70,23 +70,25 @@ typedef enum EnemyTypeTag
 {
 	TypeA,
 	TypeB,
-	TypeC
+	TypeC,
+	TypeD,
+	TypeE,
 }ENEMYTYPE;
 
-class Enemy1:Enemy
-{
+class Enemy0:Enemy
+{}
 
-}
+class Enemy1:Enemy
+{}
 
 class Enemy2:Enemy
-{
+{}
 
-}
+class Enemy_Move:Enemy
+{}
 
-class Enemy3:Enemy
-{
-
-}
+class Enemy_Stable:Enemy
+{}
 
 class Factory
 {
@@ -96,12 +98,16 @@ public:
 		switch(type)
 		{
 			case TypeA:
-			return new Enemy1();
+				return new Enemy0();
 			case TypeB:
-			return new Enemy2();
-			default:
+				return new Enemy1();
 			case TypeC:
-			return new Enemy3();
+				return new Enemy2();
+			case TypeD:
+				return new Enemy_Move();
+			case TypeE:
+				return new Enemy_Stable();
+			default:
 			return NULL;
 		}	
 	}
