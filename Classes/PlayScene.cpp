@@ -35,7 +35,21 @@ class ConcreteObserver:Observer
 {
 public:
 	ConcreteObserver(Player *player):_player(player){}
-	void Update(){poison=true;}
+	void Update(){
+		string status=m_player.getStatus();
+		if(status=="poison")
+			poison=true;
+		else if(status=="get_bullet")
+			get_bullet=true;
+		else if(status=="get_helper")
+			get_helper=true;
+		else if(status=="speedup")
+			speedup=true;
+		else if(status=="move_guard")
+			move_guard=true;
+		else if(status=="get_key")
+			get_key=true;
+	}
 private:
 	Player *_player
 }
@@ -354,7 +368,8 @@ void PlayScene::PlayerPosition(Point position)
 			else if (key == "True"){
 				_meta->removeTileAt(tileCoord);
 				_foreground_6->removeTileAt(tileCoord);
-				get_key = true;
+				//get_key = true;
+				_player.setStatus("get_key");
 				
 				_label = Label::createWithTTF(config, StringUtils::format("GET A KEY"));
 				_label->setPosition(pos);
@@ -365,12 +380,14 @@ void PlayScene::PlayerPosition(Point position)
 			else if (guard == "True"){
 				_meta->removeTileAt(tileCoord);
 				_foreground_1->removeTileAt(tileCoord);
-				move_guard = true;
+				_player.setStatus("move_guard");
+				//move_guard = true;
 			}
 			else if (poisoning == "True"){
 				_meta->removeTileAt(tileCoord);
 				_foreground_1->removeTileAt(tileCoord);
-				poison = true;
+				//poison=true;
+				_player.setStatus("poison");
 				_numCollected--;
 				SimpleAudioEngine::getInstance()->playEffect("poison.wav");
 				
@@ -384,7 +401,8 @@ void PlayScene::PlayerPosition(Point position)
 				_numCollected += 2;
 				_meta->removeTileAt(tileCoord);
 				_foreground_1->removeTileAt(tileCoord);
-				speedup = true;
+				//speedup = true;
+				_player.setStatus("speedup");
 
 				SimpleAudioEngine::getInstance()->playEffect("pickup.wav");
 				
@@ -416,7 +434,8 @@ void PlayScene::PlayerPosition(Point position)
 				SimpleAudioEngine::getInstance()->playEffect("pickup.wav");
 			}
 			else if (bullet == "True"){
-				get_bullet = true;
+				_player.setStatus("get_bullet");
+				//get_bullet = true;
 				_meta->removeTileAt(tileCoord);
 				_foreground_3->removeTileAt(tileCoord);
 
