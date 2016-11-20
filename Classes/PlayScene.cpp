@@ -54,56 +54,6 @@ private:
 	Player *_player
 }
 
-
-class Player:Sprite
-{
-public:
-	Player();
-	void attach(Observer *observer){m_observers.push_back(observer);}
-	void detach(Observer *observer){m_observers.remove(observer);}
-	void notify()
-	{
-		list<Observer*>::iterator iter = m_observers.begin();
-		for(;iter!=m_observers.end();iter++)
-			(*iter)->Update();
-	}
-	virtual void setStatus(string s){m_status=s;}
-	virtual string getStatus(){return m_status;}
-private:
-	list<Observer* > m_observers;
-	string m_status;
-}
-
-
-class Enemy:Sprite
-{
-
-}
-
-typedef enum EnemyTypeTag
-{
-	TypeA,
-	TypeB,
-	TypeC,
-	TypeD,
-	TypeE,
-}ENEMYTYPE;
-
-class Enemy0:Enemy
-{}
-
-class Enemy1:Enemy
-{}
-
-class Enemy2:Enemy
-{}
-
-class Enemy_Move:Enemy
-{}
-
-class Enemy_Stable:Enemy
-{}
-
 class Factory
 {
 public:
@@ -272,6 +222,7 @@ bool PlayScene2::init()
 	}
 	PlayScene::init();
 }
+
 bool PlayScene3::init()
 {
 	if (!Layer::init())
