@@ -34,7 +34,7 @@ class Observer
 class ConcreteObserver:Observer
 {
 public:
-	ConcreteObserver(Player *player):_player(player){}
+	ConcreteObserver(Player *player):m_player(player){}
 	void Update(){
 		string status=m_player.getStatus();
 		if(status=="poison")
@@ -51,7 +51,7 @@ public:
 			get_key=true;
 	}
 private:
-	Player *_player
+	Player *m_player
 }
 
 
@@ -77,32 +77,41 @@ private:
 
 class Enemy:Sprite
 {
-
+public:
+	Enemy();
 }
 
 typedef enum EnemyTypeTag
 {
-	TypeA,
-	TypeB,
-	TypeC,
-	TypeD,
-	TypeE,
+	enemy0,
+	enemy2,
+	enemyMove,
+	enemyStable,
 }ENEMYTYPE;
 
 class Enemy0:Enemy
-{}
-
-class Enemy1:Enemy
-{}
+{
+public:
+	Enemy0(){return Enemy("enemy_0.png");}
+}
 
 class Enemy2:Enemy
-{}
+{
+public:
+	Enemy2(){return Enemy("enemy_2.png");}
+}
 
 class Enemy_Move:Enemy
-{}
+{
+public:
+	Enemy_Move(){return Enemy("enemy_move.png");}
+}
 
 class Enemy_Stable:Enemy
-{}
+{
+public:
+	Enemy_Move(){return Enemy("enemy_stable.png");}
+}
 
 class Factory
 {
@@ -111,18 +120,16 @@ public:
 	{
 		switch(type)
 		{
-			case TypeA:
+			case enemy0:
 				return new Enemy0();
-			case TypeB:
-				return new Enemy1();
-			case TypeC:
+			case enemy2:
 				return new Enemy2();
-			case TypeD:
+			case enemyMove:
 				return new Enemy_Move();
-			case TypeE:
+			case enemyStable:
 				return new Enemy_Stable();
 			default:
-			return NULL;
+				return NULL;
 		}	
 	}
 
@@ -235,6 +242,8 @@ bool PlayScene1::init()
 	_player = Sprite::create("Hero.png");
 	_player->setPosition(x, y);
 	addChild(_player);
+
+	Factory _factory=new Factory();
 
 	ViewPoint(_player->getPosition());
 
@@ -583,7 +592,7 @@ Point PlayScene::tileToPosition(Point position)
 
 void PlayScene::Enemy_Stable(Point pos)
 {
-	auto enemy = Sprite::create("enemy_stable.png");
+	auto enemy = _factory->createEnemy("enemyStable");
 	enemy->setPosition(pos);
 	enemy->setOpacity(120);
 	addChild(enemy);
@@ -664,7 +673,7 @@ void PlayScene::test_guard(float dt)
 void PlayScene::Enemy_Move(Point pos, int i)
 {
 	//enemy for four direction
-	auto enemy = Sprite::create("enemy_move.png");
+	auto enemy = _factory->createEnemy("enemyMove");
 	enemy->setPosition(pos);
 	addChild(enemy);
 	if (i == 1){
@@ -706,7 +715,7 @@ void PlayScene::addEnemy(Point pos)
 {
 	pos.x+=100 * rand_minus1_1()
 	pos.y+=100 * rand_minus1_1();
-	auto enemy = Sprite::create("enemy_0.png");
+	auto enemy = _factory->createEnemy("enemy0");
 	enemy->setPosition(pos);
 	this->addChild(enemy);
 	this->moveEnemy(enemy);
@@ -719,7 +728,7 @@ void PlayScene::addEnemy_2(Point pos)
 {
 	pos.x += 100 * rand_minus1_1();
 	pos.y += 100 * rand_minus1_1();   
-	auto enemy = Sprite::create("enemy_2.png");
+	auto enemy = _factory->createEnemy("enemy2");
 	enemy->setPosition(pos);
 	this->addChild(enemy);
 	this->moveEnemy(enemy);
