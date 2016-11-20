@@ -404,23 +404,23 @@ void PlayScene::PlayerPosition(Point position)
 	_player->setPosition(position);
 }
 
-void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
+void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event, string up, string down, string left, string right)
 {
 	auto playerPos = _player->getPosition();
 
-	if (EventKeyboard::KeyCode::KEY_W == keyCode)
+	if (EventKeyboard::KeyCode::up == keyCode)
 	{
 		Up();
 	}
-	if (EventKeyboard::KeyCode::KEY_S == keyCode)
+	if (EventKeyboard::KeyCode::down == keyCode)
 	{
 		Down();
 	}
-	if (EventKeyboard::KeyCode::KEY_A == keyCode)
+	if (EventKeyboard::KeyCode::left == keyCode)
 	{
 		Left();
 	}
-	if (EventKeyboard::KeyCode::KEY_D == keyCode)
+	if (EventKeyboard::KeyCode::right == keyCode)
 	{
 		Right();
 

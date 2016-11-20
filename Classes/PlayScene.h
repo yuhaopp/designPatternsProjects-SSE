@@ -72,7 +72,8 @@ public:
 	CREATE_FUNC(PlayScene);
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
+	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event，string up, string down, string left, string right);
+	
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
 
 	void ViewPoint(cocos2d::Point position);
