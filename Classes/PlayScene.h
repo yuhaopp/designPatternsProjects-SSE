@@ -76,6 +76,11 @@ public:
 	
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
 
+	void Up();
+	void Down();
+	void Left();
+	void Right();
+
 	void ViewPoint(cocos2d::Point position);
 	void PlayerPosition(cocos2d::Point position);
 	
