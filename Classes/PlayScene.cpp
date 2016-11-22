@@ -58,7 +58,9 @@ private:
 class Player:Sprite
 {
 public:
-	Player();
+	Player(){
+		return Sprite::create("Hero.png");
+	}
 	void attach(Observer *observer){m_observers.push_back(observer);}
 	void detach(Observer *observer){m_observers.remove(observer);}
 	void notify()
@@ -239,9 +241,13 @@ bool PlayScene1::init()
 	int x = spawnPoint["x"].asInt();
 	int y = spawnPoint["y"].asInt();
 
-	_player = Sprite::create("Hero.png");
+	Player _player = new Player();
+	//Sprite::create("Hero.png");
 	_player->setPosition(x, y);
 	addChild(_player);
+
+	ConcreteObserver concreteObserver = new ConcreteObserver(_player);
+	_player.attach(concreteObserver);
 
 	Factory _factory=new Factory();
 
@@ -424,6 +430,7 @@ void PlayScene::PlayerPosition(Point position)
 			}
 			else if (lose == "True")
 			{
+				_player.detach(concreteObserver);
 				SimpleAudioEngine::getInstance()->playEffect("lose.mp3");
 				this->lose();
 			}
@@ -456,6 +463,8 @@ void PlayScene::PlayerPosition(Point position)
 				_label->runAction(Sequence::create(DelayTime::create(2), FadeOut::create(1), RemoveSelf::create(true), NULL));
 				addChild(_label);
 			}
+
+			_player.notify();
 		}
 	}
 	SimpleAudioEngine::getInstance()->playEffect("move.wav");
