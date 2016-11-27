@@ -17,56 +17,37 @@ abstract class Command
 class KeyboardCommand : Command 
 { 
   // Fields 
-  char @operator; 
-  int operand; 
-  Calculator calculator; 
+  char direction; 
+  char key; 
+  KeySet keyset; 
  
   // Constructor 
-  public CalculatorCommand( Calculator calculator, 
-    char @operator, int operand ) 
+  public CalculatorCommand( KeySet keyset, 
+    char direction, char key ) 
   { 
-    this.calculator = calculator; 
-    this.@operator = @operator; 
-    this.operand = operand; 
+    this.keyset = keyset; 
+    this.direction = direction; 
+    this.key = key; 
   } 
  
   // Properties 
-  public char Operator 
+  public char Direction  
   { 
-    set{ @operator = value; } 
+    set{ direction = value; } 
   } 
  
-  public int Operand 
+  public int Key 
   { 
-    set{ operand = value; } 
+    set{ key = value; } 
   } 
  
   // Methods 
   override public void Execute() 
   { 
-    calculator.Operation( @operator, operand ); 
+    keyset.Set( direction, key ); 
   } 
-  
-  override public void UnExecute() 
-  { 
-    calculator.Operation( Undo( @operator ), operand ); 
-  } 
- 
-  // Private helper function 
-  private char Undo( char @operator ) 
-  { 
-    char undo = ' '; 
-    switch( @operator ) 
-    { 
-      case '+': undo = '-'; break; 
-      case '-': undo = '+'; break; 
-      case '*': undo = '/'; break; 
-      case '/': undo = '*'; break; 
-    } 
-    return undo; 
-  } 
-} 
- 
+   
+
 // "Receiver" 
 class Calculator 
 { 
