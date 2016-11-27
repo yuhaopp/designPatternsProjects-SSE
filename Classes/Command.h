@@ -36,7 +36,7 @@ class KeyboardCommand : Command
     set{ direction = value; } 
   } 
  
-  public int Key 
+  public char Key 
   { 
     set{ key = value; } 
   } 
@@ -49,15 +49,13 @@ class KeyboardCommand : Command
    
 
 // "Receiver" 
-class Calculator 
+class KeySet 
 { 
-  // Fields 
-  private int total = 0; 
  
   // Methods 
-  public void Operation( char @operator, int operand ) 
+  public void Set( char key, char direction ) 
   { 
-    switch( @operator ) 
+    switch( direction ) 
     { 
       case '+': total += operand; break; 
       case '-': total -= operand; break; 
