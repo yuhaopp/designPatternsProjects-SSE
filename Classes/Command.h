@@ -17,12 +17,12 @@ abstract class Command
 class KeyboardCommand : Command 
 { 
   // Fields 
-  char direction; 
-  char key; 
+  string direction; 
+  string key; 
   KeySet keyset; 
  
   // Constructor 
-  public CalculatorCommand( KeySet keyset, 
+  public SettingCommand( KeySet keyset, 
     char direction, char key ) 
   { 
     this.keyset = keyset; 
@@ -57,10 +57,10 @@ class KeySet
   { 
     switch( direction ) 
     { 
-      case 'up': total += operand; break; 
-      case 'down': total -= operand; break; 
-      case 'left': total *= operand; break; 
-      case 'right': total /= operand; break; 
+      case 'up': ^^^^; break; 
+      case 'down': ^^^^; break; 
+      case 'left': ^^^^; break; 
+      case 'right': ^^^^; break; 
     }
   } 
 } 
@@ -69,39 +69,15 @@ class KeySet
 class User 
 { 
   // Fields 
-  private Calculator calculator = new Calculator(); 
-  private ArrayList commands = new ArrayList(); 
-  private int current = 0; 
+  private Keyset keyset = new Keyset(); 
  
   // Methods 
-  public void Redo( int levels ) 
-  { 
-    Console.WriteLine( "---- Redo {0} levels ", levels ); 
-    // Perform redo operations 
-    for( int i = 0; i < levels; i++ ) 
-      if( current < commands.Count - 1 ) 
-        ((Command)commands[ current++ ]).Execute(); 
-  } 
  
-  public void Undo( int levels ) 
-  { 
-    Console.WriteLine( "---- Undo {0} levels ", levels ); 
-    // Perform undo operations 
-    for( int i = 0; i < levels; i++ ) 
-      if( current > 0 ) 
-        ((Command)commands[ --current ]).UnExecute(); 
-  } 
- 
-  public void Compute( char @operator, int operand ) 
+  public void Setting( string direction, string key ) 
   { 
     // Create command operation and execute it 
-    Command command = new CalculatorCommand( 
-      calculator, @operator, operand ); 
+    public SettingCommand(keyset, direction, key );
     command.Execute(); 
- 
-    // Add command to undo list 
-    commands.Add( command ); 
-    current++; 
   } 
 } 
  
@@ -115,13 +91,6 @@ public class Client
     // Create user and let her compute 
     User user = new User(); 
  
-    user.Compute( '+', 100 ); 
-    user.Compute( '-', 50 ); 
-    user.Compute( '*', 10 ); 
-    user.Compute( '/', 2 ); 
- 
-    // Undo and then redo some commands 
-    user.Undo( 4 ); 
-    user.Redo( 3 ); 
+    user.Compute( '+', 100 );  
   } 
 } 
