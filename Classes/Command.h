@@ -17,12 +17,21 @@ abstract class Command
 class KeyboardCommand : Command 
 { 
   // Fields 
+<<<<<<< HEAD
   string direction; 
   string key; 
   KeySet keyset; 
  
   // Constructor 
   public SettingCommand( KeySet keyset, 
+=======
+  char direction; 
+  char key; 
+  KeySet keyset; 
+ 
+  // Constructor 
+  public CalculatorCommand( KeySet keyset, 
+>>>>>>> origin/fredhua
     char direction, char key ) 
   { 
     this.keyset = keyset; 
@@ -57,11 +66,21 @@ class KeySet
   { 
     switch( direction ) 
     { 
+<<<<<<< HEAD
       case 'up': ^^^^; break; 
       case 'down': ^^^^; break; 
       case 'left': ^^^^; break; 
       case 'right': ^^^^; break; 
     }
+=======
+      case '+': total += operand; break; 
+      case '-': total -= operand; break; 
+      case '*': total *= operand; break; 
+      case '/': total /= operand; break; 
+    } 
+    Console.WriteLine( "Total = {0} (following {1} {2})", 
+      total, @operator, operand ); 
+>>>>>>> origin/fredhua
   } 
 } 
  
@@ -69,6 +88,7 @@ class KeySet
 class User 
 { 
   // Fields 
+<<<<<<< HEAD
   private Keyset keyset = new Keyset(); 
  
   // Methods 
@@ -78,6 +98,41 @@ class User
     // Create command operation and execute it 
     public SettingCommand(keyset, direction, key );
     command.Execute(); 
+=======
+  private Calculator calculator = new Calculator(); 
+  private ArrayList commands = new ArrayList(); 
+  private int current = 0; 
+ 
+  // Methods 
+  public void Redo( int levels ) 
+  { 
+    Console.WriteLine( "---- Redo {0} levels ", levels ); 
+    // Perform redo operations 
+    for( int i = 0; i < levels; i++ ) 
+      if( current < commands.Count - 1 ) 
+        ((Command)commands[ current++ ]).Execute(); 
+  } 
+ 
+  public void Undo( int levels ) 
+  { 
+    Console.WriteLine( "---- Undo {0} levels ", levels ); 
+    // Perform undo operations 
+    for( int i = 0; i < levels; i++ ) 
+      if( current > 0 ) 
+        ((Command)commands[ --current ]).UnExecute(); 
+  } 
+ 
+  public void Compute( char @operator, int operand ) 
+  { 
+    // Create command operation and execute it 
+    Command command = new CalculatorCommand( 
+      calculator, @operator, operand ); 
+    command.Execute(); 
+ 
+    // Add command to undo list 
+    commands.Add( command ); 
+    current++; 
+>>>>>>> origin/fredhua
   } 
 } 
  
@@ -91,6 +146,17 @@ public class Client
     // Create user and let her compute 
     User user = new User(); 
  
+<<<<<<< HEAD
     user.Compute( '+', 100 );  
+=======
+    user.Compute( '+', 100 ); 
+    user.Compute( '-', 50 ); 
+    user.Compute( '*', 10 ); 
+    user.Compute( '/', 2 ); 
+ 
+    // Undo and then redo some commands 
+    user.Undo( 4 ); 
+    user.Redo( 3 ); 
+>>>>>>> origin/fredhua
   } 
 } 
