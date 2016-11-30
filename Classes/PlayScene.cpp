@@ -4,6 +4,12 @@
 #include"GameDefine.h"
 #include"Gamepause.h"
 #include"cocos2d.h"
+#include"GameHUD.h"
+#include"Enemy.h"
+#include"Player.h"
+
+using namespace CocosDenshion;
+using namespace ui;
 
 bool poison;
 int _numCollected;
@@ -11,9 +17,6 @@ int m_time;
 int judge;
 
 USING_NS_CC;
-
-using namespace CocosDenshion;
-using namespace ui;
 
 PlaySceneCover *PlayScene::_cover = NULL;
 
@@ -51,72 +54,7 @@ public:
 			get_key=true;
 	}
 private:
-	Player *m_player
-}
-
-<<<<<<< HEAD
-=======
-
-class Player : public Sprite
-{
-public:
-	Player(){
-		return Sprite::create("Hero.png");
-	}
-	void attach(Observer *observer){m_observers.push_back(observer);}
-	void detach(Observer *observer){m_observers.remove(observer);}
-	void notify()
-	{
-		list<Observer*>::iterator iter = m_observers.begin();
-		for(;iter!=m_observers.end();iter++)
-			(*iter)->Update();
-	}
-	virtual void setStatus(string s){m_status=s;}
-	virtual string getStatus(){return m_status;}
-private:
-	list<Observer* > m_observers;
-protected:
-	string m_status;
-}
-
-
-class Enemy : public Sprite
-{
-public:
-	Enemy();
-	virtual ~Enemy();
-}
-
-typedef enum EnemyTypeTag
-{
-	enemy0,
-	enemy2,
-	enemyMove,
-	enemyStable,
-}ENEMYTYPE;
-
-class Enemy0:public Enemy
-{
-public:
-	Enemy0(){return new Enemy("enemy_0.png");}
-}
-
-class Enemy2:public Enemy
-{
-public:
-	Enemy2(){return new Enemy("enemy_2.png");}
-}
-
-class Enemy_Move:public Enemy
-{
-public:
-	Enemy_Move(){return new Enemy("enemy_move.png");}
-}
-
-class Enemy_Stable:public Enemy
-{
-public:
-	Enemy_Move(){return new Enemy("enemy_stable.png");}
+	Player *m_player;
 }
 
 >>>>>>> lsy
@@ -160,26 +98,6 @@ Scene* PlayScene1::createScene()
 
 	scene->addChild(layer);
 	scene->addChild(cover);
-	return scene;
-}
-
-Scene* PlayScene2::createScene()
-{
-	auto scene = Scene::create();
-
-	auto layer = PlayScene2::create();
-	scene->addChild(layer);
-
-	return scene;
-}
-
-Scene* PlayScene3::createScene()
-{
-	auto scene = Scene::create();
-
-	auto layer = PlayScene3::create();
-	scene->addChild(layer);
-
 	return scene;
 }
 
@@ -288,25 +206,6 @@ bool PlayScene1::init()
 		}
 	}
 	group_2 = true;
-	PlayScene::init();
-}
-
-//ÓÐ´ýºóÐø¿ª·¢
-bool PlayScene2::init()
-{
-	if (!Layer::init())
-	{
-		return false;
-	}
-	PlayScene::init();
-}
-
-bool PlayScene3::init()
-{
-	if (!Layer::init())
-	{
-		return false;
-	}
 	PlayScene::init();
 }
 
@@ -485,112 +384,6 @@ void PlayScene::PlayerPosition(Point position)
 	_player->setPosition(position);
 }
 
-void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event, string up, string down, string left, string right)
-{
-	auto playerPos = _player->getPosition();
-
-	if (EventKeyboard::KeyCode::up == keyCode)
-	{
-		Up();
-	}
-	if (EventKeyboard::KeyCode::down == keyCode)
-	{
-		Down();
-	}
-	if (EventKeyboard::KeyCode::left == keyCode)
-	{
-		Left();
-	}
-	if (EventKeyboard::KeyCode::right == keyCode)
-	{
-		Right();
-
-	}
-	if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getMapSize().width) &&
-		playerPos.y <= (_tileMap->getMapSize().height * _tileMap->getMapSize().height) &&
-		playerPos.y >= 0 &&
-		playerPos.x >= 0)
-	{
-		this->PlayerPosition(playerPos);
-	}
-
-	this->ViewPoint(_player->getPosition());
-}
-
-void Up()
-{
-	playerPos.y += _tileMap->getTileSize().height;
-}
-
-void Down()
-{
-	playerPos.y -= _tileMap->getTileSize().height;
-}
-
-void Left()
-{
-	playerPos.x -= _tileMap->getTileSize().width;
-}
-
-void Right()
-{
-	playerPos.x += _tileMap->getTileSize().width;
-}
-
-void PlayScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
-{
-}
-
-void PlayScene::onTouchEnded(Touch *touch, Event *unused_event)
-{
-	if (judge == 0 && get_bullet == true) {
-		judge = 1;
-		// Find where the touch is
-		auto touchLocation = touch->getLocation();
-		touchLocation = this->convertToNodeSpace(touchLocation);
-
-		// Create a projectile and put it at the player's location
-		auto projectile = Sprite::create("bullet.png");
-		projectile->setPosition(_player->getPosition());
-		this->addChild(projectile);
-
-		int realX;
-
-		// Are we shooting to the left or right?
-		auto diff = touchLocation - _player->getPosition();
-		if (diff.x > 0)
-		{
-			realX = (_tileMap->getMapSize().width * _tileMap->getTileSize().width) +
-				(projectile->getContentSize().width / 2);
-		}
-		else {
-			realX = -(_tileMap->getMapSize().width * _tileMap->getTileSize().width) -
-				(projectile->getContentSize().width / 2);
-		}
-		float ratio = (float)diff.y / (float)diff.x;
-		int realY = ((realX - projectile->getPosition().x) * ratio) + projectile->getPosition().y;
-		auto realDest = Point(realX, realY);
-
-		// Determine the length of how far we're shooting
-		int offRealX = realX - projectile->getPosition().x;
-		int offRealY = realY - projectile->getPosition().y;
-		float length = sqrtf((offRealX*offRealX) + (offRealY*offRealY));
-		float velocity;
-		if (speedup == false)
-			velocity = 60 / 1; 
-		else
-			velocity = 100 / 1;
-		float realMoveDuration = length / velocity;
-
-		SimpleAudioEngine::getInstance()->playEffect("bullet.wav");
-		// Move projectile to actual endpoint
-		auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(PlayScene::projectileMoveFinished, this));
-		projectile->runAction(Sequence::create(MoveTo::create(realMoveDuration, realDest), actionMoveDone, NULL));
-
-		_projectiles.pushBack(projectile);
-	}
-}
-
 void PlayScene::ViewPoint(Point position) {
 	auto winSize = Director::getInstance()->getWinSize();
 
@@ -691,93 +484,6 @@ void PlayScene::test_guard(float dt)
 		this->removeChild(projectile);
 	}
 	projectilesToDelete.clear();
-}
-
-void PlayScene::Enemy_Move(Point pos, int i)
-{
-	//enemy for four direction
-	auto enemy = _factory->createEnemy(enemyMove);
-	enemy->setPosition(pos);
-	addChild(enemy);
-	if (i == 1){
-		auto moveBy_1 = MoveBy::create(1.5f, Vec2(-160, 0));
-		auto moveBy_2 = MoveBy::create(1.5f, Vec2(160, 0));
-		auto seq = Sequence::create(moveBy_1, moveBy_2, nullptr);
-		auto repeat = RepeatForever::create(seq);
-
-		enemy->runAction(repeat);
-	}
-	else if (i == 2){
-		auto moveBy_1 = MoveBy::create(1.5f, Vec2(160, 0));
-		auto moveBy_2 = MoveBy::create(1.5f, Vec2(-160, 0));
-		auto seq = Sequence::create(moveBy_1, moveBy_2, nullptr);
-		auto repeat = RepeatForever::create(seq);
-
-		enemy->runAction(repeat);
-	}
-	else if (i == 3){
-		auto moveBy_1 = MoveBy::create(1.5f, Vec2(0, -96));
-		auto moveBy_2 = MoveBy::create(1.5f, Vec2(0, 96));
-		auto seq = Sequence::create(moveBy_1, moveBy_2, nullptr);
-		auto repeat = RepeatForever::create(seq);
-
-		enemy->runAction(repeat);
-	}
-	else if (i == 4){
-		auto moveBy_1 = MoveBy::create(1.5f, Vec2(0, 96));
-		auto moveBy_2 = MoveBy::create(1.5f, Vec2(0, -96));
-		auto seq = Sequence::create(moveBy_1, moveBy_2, nullptr);
-		auto repeat = RepeatForever::create(seq);
-
-		enemy->runAction(repeat);
-	}
-	unchanged_enemies.pushBack(enemy);
-}
-
-void PlayScene::addEnemy(Point pos)
-{
-	pos.x+=100 * rand_minus1_1()
-	pos.y+=100 * rand_minus1_1();
-	auto enemy = _factory->createEnemy(enemy0);
-	enemy->setPosition(pos);
-	this->addChild(enemy);
-	this->moveEnemy(enemy);
-
-	_enemies.pushBack(enemy);
-
-}
-
-void PlayScene::addEnemy_2(Point pos)  
-{
-	pos.x += 100 * rand_minus1_1();
-	pos.y += 100 * rand_minus1_1();   
-	auto enemy = _factory->createEnemy(enemy2);
-	enemy->setPosition(pos);
-	this->addChild(enemy);
-	this->moveEnemy(enemy);
-
-	_enemies_2.pushBack(enemy);
-}
-
-void PlayScene::enemyMoveFinished(Object *pSender)
-{
-	Sprite *enemy = (Sprite *)pSender;
-
-	this->moveEnemy(enemy);
-}
-
-void PlayScene::moveEnemy(Sprite *enemy)
-{
-	//speed
-	actualDuration = 0.25f;
-	if (poison == true)
-		actualDuration = 0.15f;
-
-	// Create the actions
-	auto position = (_player->getPosition() - enemy->getPosition()).getNormalized() * 10;
-	auto actionMove = MoveBy::create(actualDuration, position);
-	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(PlayScene::enemyMoveFinished, this));
-	enemy->runAction(Sequence::create(actionMove, actionMoveDone, NULL));
 }
 
 void PlayScene::projectileMoveFinished(Object *pSender)
@@ -980,52 +686,9 @@ void PlayScene::lose()
 	Director::getInstance()->replaceScene(scene);
 }
 
-void PlaySceneCover::myclock(float dt)
-{ 
-	--m_time;
-	if (m_time == 0)
-	{
-		this->lose();
-	}
-	if (m_time > 0) {
-		Label *labelTime = (Label *)this->getChildByTag(11);
-		labelTime->setString(StringUtils::format("Time: %d ", m_time));
-	}
-}
-
 void PlayScene::bullet(float dt){
 	judge = 0;
 	show_words = false;
-}
-
-void PlaySceneCover::myscore(float dt)
-{
-	if (_numCollected >= 15)
-	{
-		SimpleAudioEngine::getInstance()->playEffect("win.mp3");
-		this->win();
-	}
-	if (_numCollected<15) {
-		Label *score = (Label *)this->getChildByTag(12);
-		score->setString(StringUtils::format("SCORE: %d/15", _numCollected));
-	}
-}
-
-void PlaySceneCover::mystate(float dt)
-{
-	if (poison == true){
-		Label *state = (Label *)this->getChildByTag(13);
-		state->setString(StringUtils::format("STATE: %s", "POISONING"));
-	}
-}
-
-void PlayScene::myusingtime(float dt)
-{
-	if (get_key == true){
-		--using_time;
-		if (using_time == 0)
-			get_key = false;
-	}
 }
 
 void PlayScene::myhelper(float dt)
@@ -1075,50 +738,11 @@ void PlayScene::menuPauseCallback(Object* pSender)
 	Director::getInstance()->pushScene(Gamepause::scene(renderTexture));
 }
 
-bool PlaySceneCover::init()
+void PlayScene::myusingtime(float dt)
 {
-	if (!Layer::init())
-	{
-		return false;
+	if (get_key == true){
+		--using_time;
+		if (using_time == 0)
+			get_key = false;
 	}
-
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-
-	TTFConfig config("fonts/DFT_YYD.ttf", 30);
-	
-	labelTime = Label::createWithTTF(config, StringUtils::format("Time: %d ", m_time));
-	labelTime->setPosition(Vec2(visibleSize.width / 2 + 300, visibleSize.height - 32));
-	labelTime->setTag(11);
-	labelTime->setColor(Color3B::BLUE);
-	addChild(labelTime);
-
-	score = Label::createWithTTF(config, StringUtils::format("SCORE: %d/15", _numCollected));
-	score->setPosition(Vec2(visibleSize.width / 2 + 300, visibleSize.height - 64));
-	score->setTag(12);
-	score->setColor(Color3B::BLUE);
-	addChild(score);
-
-	state = Label::createWithTTF(config, StringUtils::format("STATE: %s", "NORMAL"));
-	state->setPosition(Vec2(visibleSize.width / 2 + 300, visibleSize.height - 96));
-	state->setTag(13);
-	state->setColor(Color3B::BLUE);
-	addChild(state);
-
-	schedule(schedule_selector(PlaySceneCover::myclock), 1.0f);
-	schedule(schedule_selector(PlaySceneCover::mystate));
-	schedule(schedule_selector(PlaySceneCover::myscore));
-
-	MenuItemImage *pCloseItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
-		this,
-		menu_selector(PlayScene::menuPauseCallback));
-
-	pCloseItem->setPosition(Vec2(visibleSize.width - pCloseItem->getContentSize().width / 2,
-		visibleSize.height - pCloseItem->getContentSize().height / 2));
-
-	// create menu, it's an autorelease object  
-	Menu* pMenu = Menu::create(pCloseItem, NULL);
-	pMenu->setPosition(Vec2::ZERO);
-	this->addChild(pMenu, 1);
 }

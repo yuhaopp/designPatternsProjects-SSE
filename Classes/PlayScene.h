@@ -7,24 +7,6 @@ USING_NS_CC;
 
 class PlayScene;
 
-class PlaySceneCover : public cocos2d::Layer
-{
-public:
-	virtual bool init();
-	CREATE_FUNC(PlaySceneCover);
-
-	cocos2d::Label *labelTime;
-	cocos2d::Label *score;
-	cocos2d::Label *state;
-	void myclock(float dt);
-	void myscore(float dt);
-	void mystate(float dt);
-	CC_SYNTHESIZE(PlayScene*, _gameLayer, GameLayer);
-
-	void win();
-	void lose();
-};
-
 class PlayScene : public cocos2d::Layer
 {
 protected:
@@ -71,38 +53,16 @@ public:
 	virtual bool init();
 	CREATE_FUNC(PlayScene);
 
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event，string up, string down, string left, string right);
-	
-	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
-
-	void Up();
-	void Down();
-	void Left();
-	void Right();
-
 	void ViewPoint(cocos2d::Point position);
 	void PlayerPosition(cocos2d::Point position);
-	
 
 	cocos2d::Point tileToPosition(cocos2d::Point position);
-
-	void Enemy_Stable(cocos2d::Point pos);
-	void Enemy_Move(cocos2d::Point pos, int i);
-	
-	void addEnemy(cocos2d::Point pos);
-	void addEnemy_2(cocos2d::Point pos);
-	
 	void projectileMoveFinished(Object *pSender);
-	void enemyMoveFinished(cocos2d::Object *pSender);
-	void moveEnemy(cocos2d::Sprite *enemy);
 	
 	void testCollisions(float dt);
 	void test_super(float dt);
 	void test_guard(float dt);
 	void unchanged_test(float dt);
-	
-	void lose();
 	
 	void bullet(float dt);
 	void myusingtime(float dt);
@@ -118,22 +78,6 @@ public:
 	static cocos2d::Scene* createScene();
 	virtual bool init();
 	CREATE_FUNC(PlayScene1);
-};
-
-class PlayScene2 : public PlayScene
-{
-public:
-	static cocos2d::Scene* createScene();
-	virtual bool init();
-	CREATE_FUNC(PlayScene2);
-};
-
-class PlayScene3 : public PlayScene
-{
-public:
-	static cocos2d::Scene* createScene();
-	virtual bool init();
-	CREATE_FUNC(PlayScene3);
 };
 
 #endif // __GameMenu_SCENE_H__
