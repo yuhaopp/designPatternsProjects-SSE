@@ -57,10 +57,12 @@ private:
 <<<<<<< HEAD
 =======
 
-class Player:Sprite
+class Player : public Sprite
 {
 public:
-	Player();
+	Player(){
+		return Sprite::create("Hero.png");
+	}
 	void attach(Observer *observer){m_observers.push_back(observer);}
 	void detach(Observer *observer){m_observers.remove(observer);}
 	void notify()
@@ -73,14 +75,16 @@ public:
 	virtual string getStatus(){return m_status;}
 private:
 	list<Observer* > m_observers;
+protected:
 	string m_status;
 }
 
 
-class Enemy:Sprite
+class Enemy : public Sprite
 {
 public:
 	Enemy();
+	virtual ~Enemy();
 }
 
 typedef enum EnemyTypeTag
@@ -91,49 +95,57 @@ typedef enum EnemyTypeTag
 	enemyStable,
 }ENEMYTYPE;
 
-class Enemy0:Enemy
+class Enemy0:public Enemy
 {
 public:
-	Enemy0(){return Enemy("enemy_0.png");}
+	Enemy0(){return new Enemy("enemy_0.png");}
 }
 
-class Enemy2:Enemy
+class Enemy2:public Enemy
 {
 public:
-	Enemy2(){return Enemy("enemy_2.png");}
+	Enemy2(){return new Enemy("enemy_2.png");}
 }
 
-class Enemy_Move:Enemy
+class Enemy_Move:public Enemy
 {
 public:
-	Enemy_Move(){return Enemy("enemy_move.png");}
+	Enemy_Move(){return new Enemy("enemy_move.png");}
 }
 
-class Enemy_Stable:Enemy
+class Enemy_Stable:public Enemy
 {
 public:
-	Enemy_Move(){return Enemy("enemy_stable.png");}
+	Enemy_Move(){return new Enemy("enemy_stable.png");}
 }
 
 >>>>>>> lsy
 class Factory
 {
 public:
+	Factory();
+	virtual ~Factory();
 	Enemy* createEnemy(ENEMYTYPE type)
 	{
+		Enemy *enemy = NULL;
 		switch(type)
 		{
 			case enemy0:
-				return new Enemy0();
+				enemy = new Enemy0();
+				break; 
 			case enemy2:
-				return new Enemy2();
+				enemy = new Enemy2();
+				break;
 			case enemyMove:
-				return new Enemy_Move();
+				enemy = new Enemy_Move();
+				break;
 			case enemyStable:
-				return new Enemy_Stable();
+				enemy = new Enemy_Stable();
+				break;
 			default:
 				return NULL;
 		}	
+		return enemy;
 	}
 
 }
@@ -242,9 +254,13 @@ bool PlayScene1::init()
 	int x = spawnPoint["x"].asInt();
 	int y = spawnPoint["y"].asInt();
 
-	_player = Sprite::create("Hero.png");
+	Player _player = new Player();
+	//Sprite::create("Hero.png");
 	_player->setPosition(x, y);
 	addChild(_player);
+
+	ConcreteObserver concreteObserver = new ConcreteObserver(_player);
+	_player.attach(concreteObserver);
 
 	Factory _factory=new Factory();
 
@@ -430,6 +446,7 @@ void PlayScene::PlayerPosition(Point position)
 			{
 				SimpleAudioEngine::getInstance()->playEffect("lose.mp3");
 				this->lose();
+				
 			}
 			else if (in == "True"){
 				auto move_by = MoveBy::create(1.0f, Vec2(128, 0));
@@ -460,6 +477,8 @@ void PlayScene::PlayerPosition(Point position)
 				_label->runAction(Sequence::create(DelayTime::create(2), FadeOut::create(1), RemoveSelf::create(true), NULL));
 				addChild(_label);
 			}
+
+			_player.notify();
 		}
 	}
 	SimpleAudioEngine::getInstance()->playEffect("move.wav");
@@ -596,7 +615,7 @@ Point PlayScene::tileToPosition(Point position)
 
 void PlayScene::Enemy_Stable(Point pos)
 {
-	auto enemy = _factory->createEnemy("enemyStable");
+	auto enemy = _factory->createEnemy(enemyStable);
 	enemy->setPosition(pos);
 	enemy->setOpacity(120);
 	addChild(enemy);
@@ -677,7 +696,7 @@ void PlayScene::test_guard(float dt)
 void PlayScene::Enemy_Move(Point pos, int i)
 {
 	//enemy for four direction
-	auto enemy = _factory->createEnemy("enemyMove");
+	auto enemy = _factory->createEnemy(enemyMove);
 	enemy->setPosition(pos);
 	addChild(enemy);
 	if (i == 1){
@@ -719,7 +738,7 @@ void PlayScene::addEnemy(Point pos)
 {
 	pos.x+=100 * rand_minus1_1()
 	pos.y+=100 * rand_minus1_1();
-	auto enemy = _factory->createEnemy("enemy0");
+	auto enemy = _factory->createEnemy(enemy0);
 	enemy->setPosition(pos);
 	this->addChild(enemy);
 	this->moveEnemy(enemy);
@@ -732,7 +751,7 @@ void PlayScene::addEnemy_2(Point pos)
 {
 	pos.x += 100 * rand_minus1_1();
 	pos.y += 100 * rand_minus1_1();   
-	auto enemy = _factory->createEnemy("enemy2");
+	auto enemy = _factory->createEnemy(enemy2);
 	enemy->setPosition(pos);
 	this->addChild(enemy);
 	this->moveEnemy(enemy);
@@ -954,6 +973,9 @@ void PlaySceneCover::lose()
 
 void PlayScene::lose()
 {
+	_player.detach(concreteObserver);
+	delete _player;
+	delete concreteObserver;
 	auto scene = GameLoseScene::createScene();
 	Director::getInstance()->replaceScene(scene);
 }
