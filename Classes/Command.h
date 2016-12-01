@@ -13,26 +13,17 @@ abstract class Command
   abstract public void Execute(); 
 } 
  
+
 // "ConcreteCommand" 
 class KeyboardCommand : Command 
 { 
   // Fields 
-<<<<<<< HEAD
   string direction; 
   string key; 
   KeySet keyset; 
  
   // Constructor 
-  public SettingCommand( KeySet keyset, 
-=======
-  char direction; 
-  char key; 
-  KeySet keyset; 
- 
-  // Constructor 
-  public CalculatorCommand( KeySet keyset, 
->>>>>>> origin/fredhua
-    char direction, char key ) 
+  public KeyboardCommand( KeySet keyset, string direction, string key ) 
   { 
     this.keyset = keyset; 
     this.direction = direction; 
@@ -40,12 +31,12 @@ class KeyboardCommand : Command
   } 
  
   // Properties 
-  public char Direction  
+  public string Direction  
   { 
     set{ direction = value; } 
   } 
  
-  public char Key 
+  public string Key 
   { 
     set{ key = value; } 
   } 
@@ -55,85 +46,23 @@ class KeyboardCommand : Command
   { 
     keyset.Set( direction, key ); 
   } 
-   
+ 
+
 
 // "Receiver" 
 class KeySet 
 { 
- 
   // Methods 
-  public void Set( char key, char direction ) 
-  { 
-    switch( direction ) 
-    { 
-<<<<<<< HEAD
-      case 'up': ^^^^; break; 
-      case 'down': ^^^^; break; 
-      case 'left': ^^^^; break; 
-      case 'right': ^^^^; break; 
-    }
-=======
-      case '+': total += operand; break; 
-      case '-': total -= operand; break; 
-      case '*': total *= operand; break; 
-      case '/': total /= operand; break; 
-    } 
-    Console.WriteLine( "Total = {0} (following {1} {2})", 
-      total, @operator, operand ); 
->>>>>>> origin/fredhua
-  } 
+  public void Set( string key, string direction ) ; 
 } 
  
 // "Invoker" 
 class User 
 { 
   // Fields 
-<<<<<<< HEAD
   private Keyset keyset = new Keyset(); 
- 
   // Methods 
- 
-  public void Setting( string direction, string key ) 
-  { 
-    // Create command operation and execute it 
-    public SettingCommand(keyset, direction, key );
-    command.Execute(); 
-=======
-  private Calculator calculator = new Calculator(); 
-  private ArrayList commands = new ArrayList(); 
-  private int current = 0; 
- 
-  // Methods 
-  public void Redo( int levels ) 
-  { 
-    Console.WriteLine( "---- Redo {0} levels ", levels ); 
-    // Perform redo operations 
-    for( int i = 0; i < levels; i++ ) 
-      if( current < commands.Count - 1 ) 
-        ((Command)commands[ current++ ]).Execute(); 
-  } 
- 
-  public void Undo( int levels ) 
-  { 
-    Console.WriteLine( "---- Undo {0} levels ", levels ); 
-    // Perform undo operations 
-    for( int i = 0; i < levels; i++ ) 
-      if( current > 0 ) 
-        ((Command)commands[ --current ]).UnExecute(); 
-  } 
- 
-  public void Compute( char @operator, int operand ) 
-  { 
-    // Create command operation and execute it 
-    Command command = new CalculatorCommand( 
-      calculator, @operator, operand ); 
-    command.Execute(); 
- 
-    // Add command to undo list 
-    commands.Add( command ); 
-    current++; 
->>>>>>> origin/fredhua
-  } 
+  public void Setting( string direction, string key );
 } 
  
 /// <summary> 
@@ -160,3 +89,4 @@ public class Client
 >>>>>>> origin/fredhua
   } 
 } 
+#endif /* defined(__TileGame__COMMAND__) */
