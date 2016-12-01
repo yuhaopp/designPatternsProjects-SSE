@@ -4,6 +4,7 @@
 #include"GameDefine.h"
 #include"Gamepause.h"
 #include"cocos2d.h"
+#include"Factory.h"
 
 bool poison;
 int _numCollected;
@@ -85,14 +86,6 @@ public:
 	virtual ~Enemy();
 }
 
-typedef enum EnemyTypeTag
-{
-	enemy0,
-	enemy2,
-	enemyMove,
-	enemyStable,
-}ENEMYTYPE;
-
 class Enemy0:public Enemy
 {
 public:
@@ -117,35 +110,6 @@ public:
 	Enemy_Move(){return new Enemy("enemy_stable.png");}
 }
 
-class Factory
-{
-public:
-	Factory();
-	virtual ~Factory();
-	Enemy* createEnemy(ENEMYTYPE type)
-	{
-		Enemy *enemy = NULL;
-		switch(type)
-		{
-			case enemy0:
-				enemy = new Enemy0();
-				break; 
-			case enemy2:
-				enemy = new Enemy2();
-				break;
-			case enemyMove:
-				enemy = new Enemy_Move();
-				break;
-			case enemyStable:
-				enemy = new Enemy_Stable();
-				break;
-			default:
-				return NULL;
-		}	
-		return enemy;
-	}
-
-}
 
 Scene* PlayScene1::createScene()
 {
