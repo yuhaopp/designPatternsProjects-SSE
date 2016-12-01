@@ -95,6 +95,8 @@ public:
 	void projectileMoveFinished(Object *pSender);
 	void enemyMoveFinished(cocos2d::Object *pSender);
 	void moveEnemy(cocos2d::Sprite *enemy);
+
+	void projectilesHitEnenmy(cocos2d::Vector<cocos2d::Sprite *> enemyType);
 	
 	void testCollisions(float dt);
 	void test_super(float dt);
