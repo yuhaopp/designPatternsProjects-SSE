@@ -58,6 +58,13 @@ public:
 
 	cocos2d::Point tileToPosition(cocos2d::Point position);
 	void projectileMoveFinished(Object *pSender);
+<<<<<<< HEAD
+=======
+	void enemyMoveFinished(cocos2d::Object *pSender);
+	void moveEnemy(cocos2d::Sprite *enemy);
+
+	void projectilesHitEnenmy(cocos2d::Vector<cocos2d::Sprite *> enemyType);
+>>>>>>> lsy
 	
 	void testCollisions(float dt);
 	void test_super(float dt);

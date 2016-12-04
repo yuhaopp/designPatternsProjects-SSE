@@ -4,12 +4,16 @@
 #include"GameDefine.h"
 #include"Gamepause.h"
 #include"cocos2d.h"
+<<<<<<< HEAD
 #include"GameHUD.h"
 #include"Enemy.h"
 #include"Player.h"
 
 using namespace CocosDenshion;
 using namespace ui;
+=======
+#include"Factory.h"
+>>>>>>> lsy
 
 bool poison;
 int _numCollected;
@@ -54,6 +58,7 @@ public:
 			get_key=true;
 	}
 private:
+<<<<<<< HEAD
 	Player *m_player;
 }
 
@@ -87,6 +92,66 @@ public:
 	}
 
 }
+=======
+	Player *m_player
+}
+
+
+class Player : public Sprite
+{
+public:
+	Player(){
+		return Sprite::create("Hero.png");
+	}
+	void attach(Observer *observer){m_observers.push_back(observer);}
+	void detach(Observer *observer){m_observers.remove(observer);}
+	void notify()
+	{
+		list<Observer*>::iterator iter = m_observers.begin();
+		for(;iter!=m_observers.end();iter++)
+			(*iter)->Update();
+	}
+	virtual void setStatus(string s){m_status=s;}
+	virtual string getStatus(){return m_status;}
+private:
+	list<Observer* > m_observers;
+protected:
+	string m_status;
+}
+
+
+class Enemy : public Sprite
+{
+public:
+	Enemy();
+	virtual ~Enemy();
+}
+
+class Enemy0:public Enemy
+{
+public:
+	Enemy0(){return new Enemy("enemy_0.png");}
+}
+
+class Enemy2:public Enemy
+{
+public:
+	Enemy2(){return new Enemy("enemy_2.png");}
+}
+
+class Enemy_Move:public Enemy
+{
+public:
+	Enemy_Move(){return new Enemy("enemy_move.png");}
+}
+
+class Enemy_Stable:public Enemy
+{
+public:
+	Enemy_Move(){return new Enemy("enemy_stable.png");}
+}
+
+>>>>>>> lsy
 
 Scene* PlayScene1::createScene()
 {
@@ -384,6 +449,115 @@ void PlayScene::PlayerPosition(Point position)
 	_player->setPosition(position);
 }
 
+<<<<<<< HEAD
+=======
+void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
+{
+	auto playerPos = _player->getPosition();
+
+	if (EventKeyboard::KeyCode::KEY_W == keyCode)
+	{
+		Up();
+	}
+	if (EventKeyboard::KeyCode::KEY_S == keyCode)
+	{
+		Down();
+	}
+	if (EventKeyboard::KeyCode::KEY_A == keyCode)
+	{
+		Left();
+	}
+	if (EventKeyboard::KeyCode::KEY_D == keyCode)
+	{
+		Right();
+
+	}
+	if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getMapSize().width) &&
+		playerPos.y <= (_tileMap->getMapSize().height * _tileMap->getMapSize().height) &&
+		playerPos.y >= 0 &&
+		playerPos.x >= 0)
+	{
+		this->PlayerPosition(playerPos);
+	}
+
+	this->ViewPoint(_player->getPosition());
+}
+
+void PlayScene::Up()
+{
+	playerPos.y += _tileMap->getTileSize().height;
+}
+
+void PlayScene::Down()
+{
+	playerPos.y -= _tileMap->getTileSize().height;
+}
+
+void PlayScene::Left()
+{
+	playerPos.x -= _tileMap->getTileSize().width;
+}
+
+void PlayScene::Right()
+{
+	playerPos.x += _tileMap->getTileSize().width;
+}
+
+void PlayScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
+{
+}
+
+void PlayScene::onTouchEnded(Touch *touch, Event *unused_event)
+{
+	if (judge == 0 && get_bullet == true) {
+		judge = 1;
+		// Find where the touch is
+		auto touchLocation = touch->getLocation();
+		touchLocation = this->convertToNodeSpace(touchLocation);
+
+		// Create a projectile and put it at the player's location
+		auto projectile = Sprite::create("bullet.png");
+		projectile->setPosition(_player->getPosition());
+		this->addChild(projectile);
+
+		int realX;
+
+		// Are we shooting to the left or right?
+		auto diff = touchLocation - _player->getPosition();
+		if (diff.x > 0)
+		{
+			realX = (_tileMap->getMapSize().width * _tileMap->getTileSize().width) +
+				(projectile->getContentSize().width / 2);
+		}
+		else {
+			realX = -(_tileMap->getMapSize().width * _tileMap->getTileSize().width) -
+				(projectile->getContentSize().width / 2);
+		}
+		float ratio = (float)diff.y / (float)diff.x;
+		int realY = ((realX - projectile->getPosition().x) * ratio) + projectile->getPosition().y;
+		auto realDest = Point(realX, realY);
+
+		// Determine the length of how far we're shooting
+		int offRealX = realX - projectile->getPosition().x;
+		int offRealY = realY - projectile->getPosition().y;
+		float length = sqrtf((offRealX*offRealX) + (offRealY*offRealY));
+		float velocity;
+		if (speedup == false)
+			velocity = 60 / 1; 
+		else
+			velocity = 100 / 1;
+		float realMoveDuration = length / velocity;
+
+		SimpleAudioEngine::getInstance()->playEffect("bullet.wav");
+		// Move projectile to actual endpoint
+		auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(PlayScene::projectileMoveFinished, this));
+		projectile->runAction(Sequence::create(MoveTo::create(realMoveDuration, realDest), actionMoveDone, NULL));
+
+		_projectiles.pushBack(projectile);
+	}
+}
+
+>>>>>>> lsy
 void PlayScene::ViewPoint(Point position) {
 	auto winSize = Director::getInstance()->getWinSize();
 
@@ -446,6 +620,12 @@ void PlayScene::test_guard(float dt)
 		}
 	}
 
+	projectilesHitEnenmy(stable_enemies);
+}
+
+
+void PlayScene::projectilesHitEnenmy(cocos2d::Vector<cocos2d::Sprite *> enemyType)
+{
 	Vector<Sprite*> projectilesToDelete;
 	for (Sprite *projectile : _projectiles) {
 		auto projectileRect = Rect(
@@ -455,22 +635,66 @@ void PlayScene::test_guard(float dt)
 			projectile->getContentSize().height);
 
 		Vector<Sprite*> targetsToDelete;
-		// to see if any projectile hit
-		for (Sprite *target : stable_enemies) {
-			auto targetRect = Rect(
-				target->getPositionX() - target->getContentSize().width / 2,
-				target->getPositionY() - target->getContentSize().height / 2,
-				target->getContentSize().width,
-				target->getContentSize().height);
 
-			if (projectileRect.intersectsRect(targetRect)) {
-				targetsToDelete.pushBack(target);
+		if((enemyType==stable_enemies)||(enemyType==_enemies))
+		{
+				// to see if any projectile hit
+			for (Sprite *target : enemyType) {
+				auto targetRect = Rect(
+					target->getPositionX() - target->getContentSize().width / 2,
+					target->getPositionY() - target->getContentSize().height / 2,
+					target->getContentSize().width,
+					target->getContentSize().height);
+
+				if (projectileRect.intersectsRect(targetRect)) {
+					targetsToDelete.pushBack(target);
+				}
 			}
 		}
+		else
+		{
+			//to see if any projectile hit
+			for (Sprite *target : _enemies_2) {
+				int hp;
+				auto targetRect = Rect(
+					target->getPositionX() - target->getContentSize().width / 2,
+					target->getPositionY() - target->getContentSize().height / 2,
+					target->getContentSize().width,
+					target->getContentSize().height);
+			//to hit the enemy_2
+			if (projectileRect.intersectsRect(targetRect)){
+				hp = target->getOpacity();
+				target->setOpacity(hp / 2);
+				projectilesToDelete.pushBack(projectile);
+				if (target->getOpacity()<50){
+					targetsToDelete.pushBack(target);
+					}
+				}
+			}
+		}
+
 		// delete all hit enemies
 		for (Sprite *target : targetsToDelete) {
-			stable_enemies.eraseObject(target);
-			this->removeChild(target);
+			if((enemyType==stable_enemies)||(enemyType==_enemies_2))
+			{
+				stable_enemies.eraseObject(target);
+				this->removeChild(target);
+			}
+			else
+			{
+				_enemies.eraseObject(target);
+				this->removeChild(target);
+				auto pos = target->getPosition();
+
+				auto explosion = ParticleExplosion::create();
+				explosion->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
+				explosion->setPosition(pos);
+
+				explosion->setTotalParticles(500);
+				explosion->setLife(0.6f);
+
+				this->addChild(explosion);
+			}
 		}
 
 		if (targetsToDelete.size() > 0) {
@@ -486,6 +710,85 @@ void PlayScene::test_guard(float dt)
 	projectilesToDelete.clear();
 }
 
+<<<<<<< HEAD
+=======
+void PlayScene::Enemy_Move(Point pos, int i)
+{
+	//enemy for four direction
+	auto enemy = _factory->createEnemy(enemyMove);
+	enemy->setPosition(pos);
+	addChild(enemy);
+	if (i == 1){
+		auto moveBy_1 = MoveBy::create(1.5f, Vec2(-160, 0));
+		auto moveBy_2 = MoveBy::create(1.5f, Vec2(160, 0));
+	}
+	else if (i == 2){
+		auto moveBy_1 = MoveBy::create(1.5f, Vec2(160, 0));
+		auto moveBy_2 = MoveBy::create(1.5f, Vec2(-160, 0));
+	}
+	else if (i == 3){
+		auto moveBy_1 = MoveBy::create(1.5f, Vec2(0, -96));
+		auto moveBy_2 = MoveBy::create(1.5f, Vec2(0, 96));
+	}
+	else if (i == 4){
+		auto moveBy_1 = MoveBy::create(1.5f, Vec2(0, 96));
+		auto moveBy_2 = MoveBy::create(1.5f, Vec2(0, -96));
+	}
+	auto seq = Sequence::create(moveBy_1, moveBy_2, nullptr);
+	auto repeat = RepeatForever::create(seq);
+
+	enemy->runAction(repeat);
+
+	unchanged_enemies.pushBack(enemy);
+}
+
+void PlayScene::addEnemy(Point pos)
+{
+	pos.x+=100 * rand_minus1_1()
+	pos.y+=100 * rand_minus1_1();
+	auto enemy = _factory->createEnemy(enemy0);
+	enemy->setPosition(pos);
+	this->addChild(enemy);
+	this->moveEnemy(enemy);
+
+	_enemies.pushBack(enemy);
+
+}
+
+void PlayScene::addEnemy_2(Point pos)  
+{
+	pos.x += 100 * rand_minus1_1();
+	pos.y += 100 * rand_minus1_1();   
+	auto enemy = _factory->createEnemy(enemy2);
+	enemy->setPosition(pos);
+	this->addChild(enemy);
+	this->moveEnemy(enemy);
+
+	_enemies_2.pushBack(enemy);
+}
+
+void PlayScene::enemyMoveFinished(Object *pSender)
+{
+	Sprite *enemy = (Sprite *)pSender;
+
+	this->moveEnemy(enemy);
+}
+
+void PlayScene::moveEnemy(Sprite *enemy)
+{
+	//speed
+	actualDuration = 0.25f;
+	if (poison == true)
+		actualDuration = 0.15f;
+
+	// Create the actions
+	auto position = (_player->getPosition() - enemy->getPosition()).getNormalized() * 10;
+	auto actionMove = MoveBy::create(actualDuration, position);
+	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(PlayScene::enemyMoveFinished, this));
+	enemy->runAction(Sequence::create(actionMove, actionMoveDone, NULL));
+}
+
+>>>>>>> lsy
 void PlayScene::projectileMoveFinished(Object *pSender)
 {
 	judge = 0;
@@ -541,54 +844,10 @@ void PlayScene::testCollisions(float dt)
 		}
 	}
 
-	Vector<Sprite*> projectilesToDelete;
-	for (Sprite *projectile : _projectiles) {
-		auto projectileRect = Rect(
-			projectile->getPositionX() - projectile->getContentSize().width / 2,
-			projectile->getPositionY() - projectile->getContentSize().height / 2,
-			projectile->getContentSize().width,
-			projectile->getContentSize().height);
-
-		Vector<Sprite*> targetsToDelete;
-		//to see if any projectile hit
-		for (Sprite *target : _enemies) {
-			auto targetRect = Rect(
-				target->getPositionX() - target->getContentSize().width / 2,
-				target->getPositionY() - target->getContentSize().height / 2,
-				target->getContentSize().width,
-				target->getContentSize().height);
-
-			if (projectileRect.intersectsRect(targetRect)){
-				targetsToDelete.pushBack(target);
-			}
-		}
-		// delete all hit enemies
-		for (Sprite *target : targetsToDelete) {
-			_enemies.eraseObject(target);
-			this->removeChild(target);
-			auto pos = target->getPosition();
-
-			auto explosion = ParticleExplosion::create();
-			explosion->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
-			explosion->setPosition(pos);
-
-			explosion->setTotalParticles(500);
-			explosion->setLife(0.6f);
-
-			this->addChild(explosion);
-		}
-		if (targetsToDelete.size() > 0) {
-			projectilesToDelete.pushBack(projectile);
-		}
-		targetsToDelete.clear();
-	}
-	// remove projectiles
-	for (Sprite *projectile : projectilesToDelete) {
-		_projectiles.eraseObject(projectile);
-		this->removeChild(projectile);
-	}
-	projectilesToDelete.clear();
+	projectilesHitEnenmy(_enemies);
 }
+
+
 
 void PlayScene::test_super(float dt)
 {
@@ -620,49 +879,7 @@ void PlayScene::test_super(float dt)
 		}
 	}
 
-	Vector<Sprite*> projectilesToDelete;
-	for (Sprite *projectile : _projectiles) {
-		auto projectileRect = Rect(
-			projectile->getPositionX() - projectile->getContentSize().width / 2,
-			projectile->getPositionY() - projectile->getContentSize().height / 2,
-			projectile->getContentSize().width,
-			projectile->getContentSize().height);
-
-		Vector<Sprite*> targetsToDelete;
-		//to see if any projectile hit
-		for (Sprite *target : _enemies_2) {
-			int hp;
-			auto targetRect = Rect(
-				target->getPositionX() - target->getContentSize().width / 2,
-				target->getPositionY() - target->getContentSize().height / 2,
-				target->getContentSize().width,
-				target->getContentSize().height);
-			//to hit the enemy_2
-			if (projectileRect.intersectsRect(targetRect)){
-				hp = target->getOpacity();
-				target->setOpacity(hp / 2);
-				projectilesToDelete.pushBack(projectile);
-				if (target->getOpacity()<50){
-					targetsToDelete.pushBack(target);
-				}
-			}
-		}
-		// delete all hit enemies
-		for (Sprite *target : targetsToDelete) {
-			_enemies_2.eraseObject(target);
-			this->removeChild(target);
-		}
-		if (targetsToDelete.size() > 0) {
-			projectilesToDelete.pushBack(projectile);
-		}
-		targetsToDelete.clear();
-	}
-	// remove projectiles
-	for (Sprite *projectile : projectilesToDelete) {
-		_projectiles.eraseObject(projectile);
-		this->removeChild(projectile);
-	}
-	projectilesToDelete.clear();
+	projectilesHitEnenmy(_enemies_2);
 }
 
 void PlaySceneCover::win()
