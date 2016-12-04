@@ -1,5 +1,6 @@
 #include "GameHUD.h"
 #include "PlayScene.h"
+#include "Facade.h"
 
 using namespace cocos2d;
 
@@ -51,27 +52,13 @@ bool GameHUD::init()
 	this->addChild(pMenu, 1);
 }
 
-void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event, string up, string down, string left, string right)
+void PlayScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
 	auto playerPos = _player->getPosition();
 
-	if (EventKeyboard::KeyCode::up == keyCode)
-	{
-		Up();
-	}
-	if (EventKeyboard::KeyCode::down == keyCode)
-	{
-		Down();
-	}
-	if (EventKeyboard::KeyCode::left == keyCode)
-	{
-		Left();
-	}
-	if (EventKeyboard::KeyCode::right == keyCode)
-	{
-		Right();
+	Movement movement;
+	movement.MoveFun(EventKeyboard::KeyCode keyCode, Event* event);
 
-	}
 	if (playerPos.x <= (_tileMap->getMapSize().width * _tileMap->getMapSize().width) &&
 		playerPos.y <= (_tileMap->getMapSize().height * _tileMap->getMapSize().height) &&
 		playerPos.y >= 0 &&
@@ -131,26 +118,6 @@ void PlayScene::onTouchEnded(Touch *touch, Event *unused_event)
 
 		_projectiles.pushBack(projectile);
 	}
-}
-
-void Up()
-{
-	playerPos.y += _tileMap->getTileSize().height;
-}
-
-void Down()
-{
-	playerPos.y -= _tileMap->getTileSize().height;
-}
-
-void Left()
-{
-	playerPos.x -= _tileMap->getTileSize().width;
-}
-
-void Right()
-{
-	playerPos.x += _tileMap->getTileSize().width;
 }
 
 void PlayScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)

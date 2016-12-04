@@ -10,11 +10,6 @@ class GameHUD: public cocos2d:Layer {
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event，string up, string down, string left, string right);
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
 
-	void Up();
-	void Down();
-	void Left();
-	void Right();
-
 	cocos2d::Label *labelTime;
 	cocos2d::Label *score;
 	cocos2d::Label *state;
