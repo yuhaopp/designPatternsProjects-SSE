@@ -24,26 +24,14 @@ USING_NS_CC;
 
 PlaySceneCover *PlayScene::_cover = NULL;
 
-class Observer
+void ConcreteObserver::ConcreteObserver(Player *player)
 {
-	public Observer();
-	virtual ~Observer() {}
-	virtual void Update() {}
-	// void Update(){
-
-	// 	pSubject->GetState();
-	// 	if(){
-	// 		Action();
-	// 	}
-	// }
+	m_player=player;
 }
 
-class ConcreteObserver:Observer
+void ConcreteObserver::Update()
 {
-public:
-	ConcreteObserver(Player *player):m_player(player){}
-	void Update(){
-		string status=m_player.getStatus();
+	string status=m_player.getStatus();
 		if(status=="poison")
 			poison=true;
 		else if(status=="get_bullet")
@@ -56,6 +44,7 @@ public:
 			move_guard=true;
 		else if(status=="get_key")
 			get_key=true;
+<<<<<<< HEAD
 	}
 private:
 <<<<<<< HEAD
@@ -149,6 +138,8 @@ class Enemy_Stable:public Enemy
 {
 public:
 	Enemy_Move(){return new Enemy("enemy_stable.png");}
+=======
+>>>>>>> lsy
 }
 
 >>>>>>> lsy

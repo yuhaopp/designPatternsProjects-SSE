@@ -7,6 +7,43 @@ USING_NS_CC;
 
 class PlayScene;
 
+<<<<<<< HEAD
+=======
+class Observer
+{
+	public Observer();
+	virtual ~Observer();
+	virtual void Update();
+}
+
+class ConcreteObserver:Observer
+{
+public:
+	ConcreteObserver(Player *player);
+	void Update();
+private:
+	Player *m_player;
+}
+
+class PlaySceneCover : public cocos2d::Layer
+{
+public:
+	virtual bool init();
+	CREATE_FUNC(PlaySceneCover);
+
+	cocos2d::Label *labelTime;
+	cocos2d::Label *score;
+	cocos2d::Label *state;
+	void myclock(float dt);
+	void myscore(float dt);
+	void mystate(float dt);
+	CC_SYNTHESIZE(PlayScene*, _gameLayer, GameLayer);
+
+	void win();
+	void lose();
+};
+
+>>>>>>> lsy
 class PlayScene : public cocos2d::Layer
 {
 protected:
