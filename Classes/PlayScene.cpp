@@ -18,26 +18,14 @@ using namespace ui;
 
 PlaySceneCover *PlayScene::_cover = NULL;
 
-class Observer
+void ConcreteObserver::ConcreteObserver(Player *player)
 {
-	public Observer();
-	virtual ~Observer() {}
-	virtual void Update() {}
-	// void Update(){
-
-	// 	pSubject->GetState();
-	// 	if(){
-	// 		Action();
-	// 	}
-	// }
+	m_player=player;
 }
 
-class ConcreteObserver:Observer
+void ConcreteObserver::Update()
 {
-public:
-	ConcreteObserver(Player *player):m_player(player){}
-	void Update(){
-		string status=m_player.getStatus();
+	string status=m_player.getStatus();
 		if(status=="poison")
 			poison=true;
 		else if(status=="get_bullet")
@@ -50,64 +38,6 @@ public:
 			move_guard=true;
 		else if(status=="get_key")
 			get_key=true;
-	}
-private:
-	Player *m_player
-}
-
-
-class Player : public Sprite
-{
-public:
-	Player(){
-		return Sprite::create("Hero.png");
-	}
-	void attach(Observer *observer){m_observers.push_back(observer);}
-	void detach(Observer *observer){m_observers.remove(observer);}
-	void notify()
-	{
-		list<Observer*>::iterator iter = m_observers.begin();
-		for(;iter!=m_observers.end();iter++)
-			(*iter)->Update();
-	}
-	virtual void setStatus(string s){m_status=s;}
-	virtual string getStatus(){return m_status;}
-private:
-	list<Observer* > m_observers;
-protected:
-	string m_status;
-}
-
-
-class Enemy : public Sprite
-{
-public:
-	Enemy();
-	virtual ~Enemy();
-}
-
-class Enemy0:public Enemy
-{
-public:
-	Enemy0(){return new Enemy("enemy_0.png");}
-}
-
-class Enemy2:public Enemy
-{
-public:
-	Enemy2(){return new Enemy("enemy_2.png");}
-}
-
-class Enemy_Move:public Enemy
-{
-public:
-	Enemy_Move(){return new Enemy("enemy_move.png");}
-}
-
-class Enemy_Stable:public Enemy
-{
-public:
-	Enemy_Move(){return new Enemy("enemy_stable.png");}
 }
 
 

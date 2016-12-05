@@ -7,6 +7,22 @@ USING_NS_CC;
 
 class PlayScene;
 
+class Observer
+{
+	public Observer();
+	virtual ~Observer();
+	virtual void Update();
+}
+
+class ConcreteObserver:Observer
+{
+public:
+	ConcreteObserver(Player *player);
+	void Update();
+private:
+	Player *m_player;
+}
+
 class PlaySceneCover : public cocos2d::Layer
 {
 public:
